@@ -1,0 +1,32 @@
+[ 
+    { 
+        "id": 1,
+        "nombre": "Echeverria",
+        "precio": 4000, 
+        "imagen": "../assets/echeverrias.jpeg"
+    },  
+    { 
+        "id": 2,
+        "nombre": "Aloe vera",
+        "precio": 4500,
+        "imagen": "../assets/aloevera.jpeg"
+    },
+    { 
+        "id": 3,
+        "nombre": "Menta",
+        "precio": 2300,
+        "imagen": "../assets/menta.jpeg" 
+    },
+    { 
+        "id": 4,
+        "nombre": "Romero",
+        "precio": 2500,
+        "imagen": "../assets/romero.jpeg"  
+    },
+    { 
+        "id": 5,
+        "nombre": "Jazmin",
+        "precio": 5000,
+        "imagen": "../assets/jazmin.jpeg"   
+    }
+]
