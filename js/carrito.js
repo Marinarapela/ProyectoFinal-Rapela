@@ -63,8 +63,35 @@ function modificarCantidad() {
     document.querySelectorAll(".boton-eliminar").forEach(boton => {
         boton.addEventListener("click", () => {
             const index = boton.dataset.index;
-            carritoStorage.splice(index, 1); 
-            actualizarCarrito();
+            Swal.fire({
+                text: "Al confirmar, se eliminará el producto del carrito",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "darksalmon",
+                cancelButtonColor: "darksalmon",
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+                customClass: {
+                    title: 'alert-title',
+                    htmlContainer: 'alert-text'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    carritoStorage.splice(index, 1); 
+                    actualizarCarrito();
+                    listarCarrito(carritoStorage);
+                    Swal.fire({
+                        title: "Producto eliminado",
+                        text: "El producto ha sido eliminado del carrito.",
+                        icon: "success",
+                        confirmButtonColor: "darksalmon",
+                        customClass: {
+                            title: 'alert-title',
+                            htmlContainer: 'alert-text'
+                        }
+                });
+                }
+            });
         });
     });
 }
@@ -73,16 +100,56 @@ listarCarrito(carritoStorage);
 
 
 // Vaciar el carrito
-function vaciarCarrito() {
-    carritoStorage = [];
-    localStorage.removeItem("carrito"); 
-    contenedorCarrito.innerHTML = `<p>Tu carrito está vacío!</p>`;
-    mostrarTotal();
+    function vaciarCarrito() {
+            if (carritoStorage.length === 0) {
+                Swal.fire({
+                    title: "¡Ups!",
+                    text: "Tu carrito ya está vacío.",
+                    icon: "info",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "darksalmon",
+                    customClass: {
+                        title: 'alert-title',
+                        htmlContainer: 'alert-text'
+                    }
+                });
+                return; 
+            }
+        Swal.fire({
+            title: "¿Estás seguro que querés vaciar el carrito?",
+            text: "Al confirmar quedará tu carrito vacío!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "darksalmon",
+            cancelButtonColor: "darksalmon",
+            confirmButtonText: "Sí, vaciar",
+            cancelButtonText: "Cancelar",
+            customClass: {
+                title: 'alert-title',
+                htmlContainer: 'alert-text'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                carritoStorage = [];
+                localStorage.removeItem("carrito"); 
+                contenedorCarrito.innerHTML = `<p>Tu carrito está vacío!</p>`;
+                mostrarTotal();
+                Swal.fire({
+                text:  "Tu carrito ha sido eliminado",
+                icon: "success",
+                confirmButtonColor: "darksalmon",
+                customClass: {
+                    title: 'alert-title',
+                    htmlContainer: 'alert-text'
+                }
+            });
+            }
+        });
     }
     
-    let botonVaciarCarrito = document.getElementById("vaciar-carrito");
-    botonVaciarCarrito.addEventListener("click", vaciarCarrito);
-
+let botonVaciarCarrito = document.getElementById("vaciar-carrito");
+botonVaciarCarrito.addEventListener("click", vaciarCarrito);
+    
 
 // Calcular total del carrito
 let calculoTotal = document.getElementById("total-compra");
@@ -264,8 +331,17 @@ function procesarCompra() {
                     }).then((result) => {
                         if (result.isConfirmed) {
                             let datosCliente = result.value;
-                            let mensajeConfirmacion = `
-                                <p><strong>Nombre:</strong> ${datosCliente.nombre}</p>
+                            let numeroPedido = localStorage.getItem("numeroPedido"); 
+
+                            if (numeroPedido) {
+                                numeroPedido = parseInt(numeroPedido) + 1; 
+                            } else {
+                                numeroPedido = 1; 
+                            }
+                            localStorage.setItem("numeroPedido", numeroPedido); 
+
+                            let mensajeConfirmacion = `<h4>Número de Pedido: #${numeroPedido}</h4>`;
+                                mensajeConfirmacion += `<p><strong>Nombre:</strong> ${datosCliente.nombre}</p>
                                 <p><strong>Apellido:</strong> ${datosCliente.apellido}</p>
                                 <p><strong>DNI:</strong> ${datosCliente.dni}</p>
                                 <p><strong>Dirección:</strong> ${datosCliente.direccion}</p>
