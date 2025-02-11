@@ -28,5 +28,35 @@
         "nombre": "Jazmin",
         "precio": 5000,
         "imagen": "../assets/jazmin.jpeg"   
+    },
+    { 
+        "id": 6,
+        "nombre": "Alegría del hogar",
+        "precio": 3500,
+        "imagen": "../assets/alegria.jpeg"   
+    },
+    { 
+        "id": 7,
+        "nombre": "Limonero",
+        "precio": 7500,
+        "imagen": "../assets/limonero.jpeg"   
+    },
+    { 
+        "id": 8,
+        "nombre": "Potus",
+        "precio": 4500,
+        "imagen": "../assets/potus.jpg"   
+    },
+    { 
+        "id": 9,
+        "nombre": "Helecho",
+        "precio": 4500,
+        "imagen": "../assets/helecho.jpeg"   
+    },
+    { 
+        "id": 10,
+        "nombre": "Garrita de oso",
+        "precio": 5500,
+        "imagen": "../assets/garrita.jpeg"   
     }
 ]
