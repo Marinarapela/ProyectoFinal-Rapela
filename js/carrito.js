@@ -100,21 +100,21 @@ listarCarrito(carritoStorage);
 
 
 // Vaciar el carrito
-    function vaciarCarrito() {
-            if (carritoStorage.length === 0) {
-                Swal.fire({
-                    title: "¡Ups!",
-                    text: "Tu carrito ya está vacío.",
-                    icon: "info",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "darksalmon",
-                    customClass: {
-                        title: 'alert-title',
-                        htmlContainer: 'alert-text'
-                    }
-                });
-                return; 
-            }
+function vaciarCarrito() {
+        if (carritoStorage.length === 0) {
+            Swal.fire({
+                title: "¡Ups!",
+                text: "Tu carrito ya está vacío.",
+                icon: "info",
+                confirmButtonText: "OK",
+                confirmButtonColor: "darksalmon",
+                customClass: {
+                    title: 'alert-title',
+                    htmlContainer: 'alert-text'
+                }
+            });
+            return; 
+        }
         Swal.fire({
             title: "¿Estás seguro que querés vaciar el carrito?",
             text: "Al confirmar quedará tu carrito vacío!",
@@ -170,9 +170,38 @@ function actualizarCarrito() {
 mostrarTotal()
 
 
-
 // Finalizar la compra
 let botonFinalizarCompra = document.getElementById("finalizar-compra");
+
+// La consigna pedía dejar datos de formulario pre-completados
+function obtenerDatosGuardados() {
+    return {
+        nombre: localStorage.getItem("nombre") || "",
+        apellido: localStorage.getItem("apellido") || "",
+        email: localStorage.getItem("email") || "",
+        dni: localStorage.getItem("dni") || "",
+        direccion: localStorage.getItem("direccion") || "",
+        numeroTarjeta: localStorage.getItem("numeroTarjeta") || "",
+        nombreTarjeta: localStorage.getItem("nombreTarjeta") || "",
+        cvv: localStorage.getItem("cvv") || "",
+        vencimiento: localStorage.getItem("vencimiento") || ""
+    };
+}
+
+function guardarDatos() {
+    localStorage.setItem("nombre", document.getElementById("nombre").value);
+    localStorage.setItem("apellido", document.getElementById("apellido").value);
+    localStorage.setItem("email", document.getElementById("email").value);
+    localStorage.setItem("dni", document.getElementById("dni").value);
+    localStorage.setItem("direccion", document.getElementById("direccion").value);
+
+    if (document.getElementById("numeroTarjeta")) {
+        localStorage.setItem("numeroTarjeta", document.getElementById("numeroTarjeta").value);
+        localStorage.setItem("nombreTarjeta", document.getElementById("nombreTarjeta").value);
+        localStorage.setItem("cvv", document.getElementById("cvv").value);
+        localStorage.setItem("vencimiento", document.getElementById("vencimiento").value);
+    }
+}
 
 function procesarCompra() {
     if (carritoStorage.length === 0) {
@@ -226,20 +255,21 @@ function procesarCompra() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     let metodoSeleccionado = result.value;
+                    let datos = obtenerDatosGuardados();
 
                     let formularioCliente = `
-                        <input type="text" id="nombre" class="datos-input" placeholder="Nombre">
-                        <input type="text" id="apellido" class="datos-input" placeholder="Apellido">
-                        <input type="text" id="email" class="datos-input" placeholder="Email">
-                        <input type="text" id="dni" class="datos-input" placeholder="DNI (solo números)" maxlength="8">
-                        <input type="text" id="direccion" class="datos-input" placeholder="Dirección">`;
+                        <input type="text" id="nombre" class="datos-input" placeholder="Nombre" value="${datos.nombre}">
+                        <input type="text" id="apellido" class="datos-input" placeholder="Apellido" value="${datos.apellido}">
+                        <input type="text" id="email" class="datos-input" placeholder="Email" value="${datos.email}">
+                        <input type="text" id="dni" class="datos-input" placeholder="DNI (solo números)" maxlength="8" value="${datos.dni}">
+                        <input type="text" id="direccion" class="datos-input" placeholder="Dirección" value="${datos.direccion}">`;
 
                     if (metodoSeleccionado === "tarjeta") {
                         formularioCliente += `
-                            <input type="text" id="numeroTarjeta" class="datos-input" placeholder="Número de Tarjeta" maxlength="16">
-                            <input type="text" id="nombreTarjeta" class="datos-input" placeholder="Nombre en la Tarjeta">
-                            <input type="text" id="cvv" class="datos-input" placeholder="CVV" maxlength="3">
-                            <input type="text" id="vencimiento" class="datos-input" placeholder="Vencimiento (MM/YY)" maxlength="5">`;
+                            <input type="text" id="numeroTarjeta" class="datos-input" placeholder="Número de Tarjeta" maxlength="16" value="${datos.numeroTarjeta}">
+                            <input type="text" id="nombreTarjeta" class="datos-input" placeholder="Nombre en la Tarjeta" value="${datos.nombreTarjeta}">
+                            <input type="text" id="cvv" class="datos-input" placeholder="CVV" maxlength="3" value="${datos.cvv}">
+                            <input type="text" id="vencimiento" class="datos-input" placeholder="Vencimiento (MM/YY)" maxlength="5" value="${datos.vencimiento}">`;
                     }
 
                     Swal.fire({
@@ -255,6 +285,8 @@ function procesarCompra() {
                             htmlContainer: 'alert-text'
                         },
                         preConfirm: () => {
+                            guardarDatos(); 
+
                             let nombre = document.getElementById("nombre").value;
                             let apellido = document.getElementById("apellido").value;
                             let email = document.getElementById("email").value;
